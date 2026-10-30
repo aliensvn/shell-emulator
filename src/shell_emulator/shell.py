@@ -42,9 +42,9 @@ def stub(name):
 class Shell:
     """Состояние оболочки и выполнение введённых строк."""
 
-    def __init__(self, vfs_name="vfs"):
-        """Создаёт оболочку; vfs_name попадает в приглашение."""
-        self.vfs_name = vfs_name
+    def __init__(self, vfs):
+        """Создаёт оболочку над виртуальной файловой системой."""
+        self.vfs = vfs
         self.running = True
         self.exit_code = 0
         self.commands = {
@@ -56,7 +56,7 @@ class Shell:
     @property
     def prompt(self):
         """Текст приглашения к вводу."""
-        return f"{self.vfs_name}$ "
+        return f"{self.vfs.name}$ "
 
     def execute(self, line):
         """Выполняет одну строку и возвращает код завершения."""

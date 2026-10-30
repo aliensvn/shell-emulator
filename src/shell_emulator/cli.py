@@ -1,13 +1,13 @@
-"""Точка входа эмулятора: параметры, стартовый скрипт и REPL."""
+"""Точка входа эмулятора: параметры, VFS, стартовый скрипт, REPL."""
 import argparse
 import sys
-from pathlib import Path
 
 from shell_emulator.shell import Shell
+from shell_emulator.vfs import VFS, VFSError
 
 COMMENT_PREFIX = "#"
-VFS_HELP = "путь к физическому расположению VFS"
-VFS_UNSET = "<не задан>"
+VFS_HELP = "ZIP-архив с VFS (по умолчанию VFS создаётся в памяти)"
+VFS_UNSET = "<не задан, VFS по умолчанию>"
 
 
 def configure_output():
@@ -85,12 +85,31 @@ def start_script(shell, path):
     return True
 
 
+def load_vfs(path):
+    """Загружает VFS из ZIP или создаёт VFS по умолчанию.
+
+    При ошибке печатает сообщение и возвращает None.
+    """
+    try:
+        vfs = VFS.from_zip(path) if path else VFS.default()
+    except VFSError as error:
+        print(f"emulator: ошибка загрузки VFS: {error}", file=sys.stderr)
+        return None
+    files, dirs = vfs.stats()
+    print(f"[debug] VFS '{vfs.name}' загружена в память: "
+          f"файлов {files}, каталогов {dirs}")
+    return vfs
+
+
 def main(argv=None):
     """Запускает эмулятор и возвращает код завершения."""
     configure_output()
     args = build_parser().parse_args(argv)
     print_debug(args)
-    shell = Shell(Path(args.vfs).stem if args.vfs else "vfs")
+    vfs = load_vfs(args.vfs)
+    if vfs is None:
+        return 1
+    shell = Shell(vfs)
     if args.script and not start_script(shell, args.script):
         return 1
     if shell.running:

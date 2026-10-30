@@ -1,0 +1,18 @@
+# ===== Тест команд этапов 1-3 (ls, cd — заглушки; exit — настоящая) =====
+# ----- переменные окружения (EMU_DEMO задаёт ОС-скрипт)
+ls $EMU_DEMO
+ls ${EMU_DEMO}/sub
+ls '$EMU_DEMO'
+ls $NO_SUCH_VAR_XYZ
+# ----- заглушки
+ls
+ls -l /home "two words"
+cd /tmp
+cd
+# ----- ошибки
+foo bar
+ls 'unclosed
+exit abc
+exit 1 2
+# ----- завершение
+exit 0

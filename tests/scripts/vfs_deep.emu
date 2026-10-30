@@ -1,0 +1,5 @@
+# VFS с вложенностью в 5 уровней (ls и cd пока заглушки)
+ls /home/user/docs/work/reports/2026
+cd /home/user/docs/work/reports/2026
+ls -l
+exit

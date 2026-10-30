@@ -1,0 +1,5 @@
+# Минимальная VFS: один файл (ls и cd пока заглушки)
+ls
+ls hello.txt
+cd nowhere
+exit

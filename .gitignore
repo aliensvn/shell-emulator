@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+tests/data/
+build/
+dist/
+*.egg-info/
+.idea/
+.vscode/

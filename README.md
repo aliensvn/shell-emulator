@@ -11,6 +11,8 @@
 Файлы живут в виртуальной файловой системе (VFS), которая целиком хранится в памяти.
 Источник VFS — ZIP-архив; архив не распаковывается на диск и не изменяется.
 
+Команды `ls`, `cd`, `head`, `cal`, `uname` работают с VFS так же, как в UNIX-оболочке.
+
 Структура репозитория: `src/` — исходный код, `tests/` — модульные тесты, скрипты `.emu` и
 скрипты ОС, `run.sh` / `run.bat` / `Makefile` — запуск.
 
@@ -22,8 +24,16 @@
 одинарных кавычках не раскрываются, неизвестная переменная — пустая строка. Комментарий
 начинается с `#`.
 
-**Команды:** `ls` и `cd` — заглушки, печатают имя и аргументы; `exit [код]` — завершение
-работы.
+**Команды:**
+
+| Команда | Описание |
+|---|---|
+| `ls [-l] [-a] [путь...]` | список файлов; `-l` — права и размер, `-a` — скрытые файлы |
+| `cd [путь \| - \| ~]` | смена каталога; без аргумента — домашний |
+| `head [-n N] файл...` | первые N строк (по умолчанию 10); двоичные файлы — в base64 |
+| `cal [[месяц] год]` | календарь месяца или года |
+| `uname [-snrvmoa]` | сведения о системе |
+| `exit [код]` | завершение работы |
 
 **Параметры командной строки:** `--vfs PATH` — ZIP-архив с VFS (если не задан, создаётся
 VFS по умолчанию в памяти); `--script PATH` — стартовый скрипт.
@@ -55,15 +65,30 @@ make test
 Без `make`: `PYTHONPATH=src python3 -m unittest discover -s tests -v` (в Windows: `set
 PYTHONPATH=src`, затем `python -m unittest discover -s tests -v`).
 
-Демонстрация этапа: `bash tests/os_scripts/run_stage3.sh` или
-`tests\os_scripts\run_stage3.bat`. Тестовые архивы создаёт `python tests/make_vfs.py`
+Демонстрация: `bash tests/os_scripts/run_stage4.sh` или `tests\os_scripts\run_stage4.bat`;
+более ранние этапы — `run_stage1..3`. Тестовые архивы создаёт `python tests/make_vfs.py`
 (папка `tests/data/` не хранится в репозитории).
 
 ## 4. Примеры использования
 
 ```
 $ python tests/make_vfs.py
-$ ./run.sh --vfs tests/data/minimal.zip
-[debug] VFS 'minimal' загружена в память: файлов 1, каталогов 0
-minimal$ exit
+$ ./run.sh --vfs tests/data/files.zip
+files:/$ ls -l
+drwxr-xr-x 4096 docs
+-rw-r--r--   78 readme.txt
+files:/$ cd docs
+files:/docs$ head -n 1 guide.txt
+guide line 1
+files:/docs$ cal 2 2024
+   February 2024
+Su Mo Tu We Th Fr Sa
+ ...
+files:/docs$ uname -sr
+Linux 6.1.0-emu
+files:/docs$ cd nope
+cd: nope: Нет такого файла или каталога
+files:/docs$ exit
 ```
+
+Полный сценарий со всеми режимами и ошибками: `tests/scripts/stage4_all.emu`.

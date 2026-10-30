@@ -1,6 +1,7 @@
 """Оболочка эмулятора: разбор строки и запуск команд."""
+from shell_emulator.commands import COMMANDS
 from shell_emulator.output import report_error
-from shell_emulator.parser import is_number, tokenize
+from shell_emulator.parser import CommandError, is_number, tokenize
 
 EXIT_CODE_MOD = 256
 MAX_EXIT_ARGS = 1
@@ -28,35 +29,22 @@ def cmd_exit(shell, args):
     return code
 
 
-def stub(name):
-    """Создаёт команду-заглушку, печатающую своё имя и аргументы."""
-
-    def command(shell, args):
-        """Печатает имя команды и список её аргументов."""
-        print(f"{name}: аргументы = {args}")
-        return 0
-
-    return command
-
-
 class Shell:
     """Состояние оболочки и выполнение введённых строк."""
 
     def __init__(self, vfs):
         """Создаёт оболочку над виртуальной файловой системой."""
         self.vfs = vfs
+        self.cwd = "/"
+        self.oldpwd = "/"
         self.running = True
         self.exit_code = 0
-        self.commands = {
-            "ls": stub("ls"),
-            "cd": stub("cd"),
-            "exit": cmd_exit,
-        }
+        self.commands = dict(COMMANDS, exit=cmd_exit)
 
     @property
     def prompt(self):
-        """Текст приглашения к вводу."""
-        return f"{self.vfs.name}$ "
+        """Текст приглашения: имя VFS и текущий каталог."""
+        return f"{self.vfs.name}:{self.cwd}$ "
 
     def execute(self, line):
         """Выполняет одну строку и возвращает код завершения."""
@@ -69,4 +57,7 @@ class Shell:
         handler = self.commands.get(argv[0])
         if handler is None:
             return report_error(f"{argv[0]}: команда не найдена")
-        return handler(self, argv[1:])
+        try:
+            return handler(self, argv[1:])
+        except CommandError as error:
+            return report_error(str(error))

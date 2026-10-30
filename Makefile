@@ -9,7 +9,7 @@ test:
 	PYTHONPATH=src $(PYTHON) -m unittest discover -s tests -v
 
 demo:
-	bash tests/os_scripts/run_stage1.sh
+	bash tests/os_scripts/run_stage2.sh
 
 clean:
 	rm -rf tests/data

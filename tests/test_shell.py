@@ -9,18 +9,6 @@ from support import PROMPT, make_shell, run
 class ShellTest(unittest.TestCase):
     """Проверки Shell.execute."""
 
-    def test_stub_prints_name_and_args(self):
-        """Заглушка выводит имя команды и аргументы."""
-        code, out, _ = run(make_shell(), "ls -l /tmp")
-        self.assertEqual(code, 0)
-        self.assertIn("ls: аргументы = ['-l', '/tmp']", out)
-
-    def test_stub_gets_expanded_variable(self):
-        """Заглушка получает уже раскрытую переменную окружения."""
-        with mock.patch.dict(os.environ, {"EMU_X": "val"}):
-            _, out, _ = run(make_shell(), "cd $EMU_X")
-        self.assertIn("['val']", out)
-
     def test_prompt_contains_vfs_name(self):
         """Приглашение содержит имя VFS."""
         self.assertEqual(make_shell().prompt, PROMPT)

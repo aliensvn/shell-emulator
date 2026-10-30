@@ -1,5 +1,14 @@
-# VFS с вложенностью в 5 уровней (ls и cd пока заглушки)
-ls /home/user/docs/work/reports/2026
-cd /home/user/docs/work/reports/2026
+# VFS с вложенностью в 5 уровней: настоящие ls, cd, head
+ls -a
+cd home/user/docs/work/reports/2026
 ls -l
+head q3.txt
+cd /etc/config/app
+ls
+head -n 1 settings.ini
+cd ~
+ls
+cd -
+cd ../../..
+ls
 exit

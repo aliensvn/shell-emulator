@@ -5,7 +5,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from shell_emulator.shell import Shell
 from shell_emulator.vfs import VFS
 
-PROMPT = "vfs$ "
+PROMPT = "vfs:/$ "
 
 
 def make_shell():

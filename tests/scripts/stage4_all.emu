@@ -1,0 +1,60 @@
+# ===== Полный тест команд (этапы 1-4). Запускать с files.zip =====
+# ----- ошибки разбора и неизвестные команды
+foo bar
+ls 'unclosed
+# ----- переменные окружения (EMU_DEMO задаёт ОС-скрипт)
+ls $NO_SUCH_VAR_XYZ
+ls '$EMU_DEMO'
+# ----- ls
+ls
+ls -l
+ls -a
+ls -la
+ls docs
+ls docs readme.txt
+ls nope
+ls -z
+# ----- cd
+cd docs
+ls
+cd ..
+cd -
+cd -
+cd /empty_dir
+cd /
+cd nope
+cd readme.txt
+cd a b
+cd
+cd $EMU_DEMO
+cd /
+# ----- head
+head readme.txt
+head -n 3 numbers.txt
+head -n3 numbers.txt
+head -n 0 numbers.txt
+head numbers.txt readme.txt
+head -n 2 logo.bin
+head docs
+head nope.txt
+head
+head -n x readme.txt
+head -n
+head -z f
+# ----- cal
+cal 2 2024
+cal 2026
+cal 13 2024
+cal abc
+cal 1 2 3
+cal
+# ----- uname
+uname
+uname -s
+uname -a
+uname -sr
+uname -z
+uname extra
+# ----- exit
+exit abc
+exit 0
